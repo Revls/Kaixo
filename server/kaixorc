@@ -1,0 +1,7 @@
+port: 80
+hostsfile: /etc/hosts
+notfound: 8081
+notfoundmsg: ::kaixo service not found
+services: HOME/.kaixo
+config: HOME/.kaixo/.kaixorc
+staticport: 8082

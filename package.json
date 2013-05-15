@@ -1,0 +1,30 @@
+{
+  "name": "Kaixo",
+  "version": "0.0.0",
+  "description": "A Pow like server written in JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "tap ./tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Revls/Kaixo.git"
+  },
+  "keywords": [
+    "pow",
+    "server",
+    "static",
+    "cli"
+  ],
+  "author": "Alejandro Morales <alejandro@revls.org>",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "~1.1.1",
+    "express": "~3.2.1",
+    "shelljs": "~0.1.3",
+    "watch": "~0.7.0",
+    "minilog": "~0.1.0",
+    "http-proxy": "~0.10.2",
+    "ecstatic": "~0.4.2"
+  }
+}
