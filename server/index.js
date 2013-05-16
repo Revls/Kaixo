@@ -2,16 +2,17 @@ var fs = require('fs')
 var http = require('http')
 var path = require('path')
 
-global.cfg = require('./config')
+var cfg = global.cfg = require('./config')
+var logger = require('./logger')('Kaixo')
 var monitor = require('watch')
 var Proxy = require('http-proxy')
 var tasks = require('./tasks')
 
 
+
 var port = +process.env.PORT || 80
 var home = process.env.HOME
 var cfgn = path.join(home, '.kaixo')
-var cfg = fs.readFileSync(path.join(cfgn, '.kaixorc'))
 var hosts = tasks.loadServices()
 
 monitor.createMonitor(cfgn, function (monitor) {
@@ -30,22 +31,18 @@ tasks.createService.on('hosts', function (_hosts){
 Proxy.createServer(function (req, res, proxy){
   var hostname = req.headers.host
   if (hostname in hosts && hosts[hostname].port) {
+    logger.debug('Host: ' + hostname + ' -- Port: ' + hosts[hostname].port)
     return proxy.proxyRequest(req, res, {
        host: 'localhost',
        port: hosts[hostname].port
      })
   }
-
-  res.end('::Kaixo service not found')
+  res.end('::Kaixo service is ready')
 }).listen(port, function (){
-  log('::Kaixo server is ready')
+  logger.info('::Kaixo server is ready')
 })
 
 function log(){
   process.stdout.write.apply(process.stdout, arguments)
   process.stdout.write('\n')
 }
-
-
-
-

@@ -1,5 +1,58 @@
 #!/usr/bin/env node
 
-var program = require('commander')
-var kaixo = require('../')
+var fs = require('fs')
+var shell = require('shelljs')
 
+var cfgfile = process.env.HOME + '/.kaixo'
+var daemon = require('daemonize2').setup({
+  main: __dirname + '/../index.js',
+  name: 'Kaixo',
+  pidfile: '/var/run/kaixo.pid',
+  silent: true
+})
+
+if (process.getuid() != 0) {
+  console.error('Kaixo is expected to run as root')
+  process.exit(1)
+}
+
+switch (process.argv[2]) {
+  case "start":
+    if (!fs.existsSync(cfgfile)){
+      shell.mkdir(cfgfile)
+      shell.cp(__dirname + '/server/kaixorc', cfgfile + '/.kaixorc')
+    }
+    daemon.start()
+    break
+  case "stop":
+    daemon.stop()
+    break
+  case "kill":
+    daemon.kill()
+    break
+  case "restart":
+    console.log('Restartin Kaixo...')
+    daemon.stop(function(err) {
+      daemon.start()
+    })
+    break
+  case "reload":
+    console.log('Reloading Kaixo')
+    daemon.sendSignal('SIGUSR1')
+    break
+  case "status":
+    var pid = daemon.status()
+    if (pid)
+      console.log('Kaixo running. PID: ' + pid)
+    else
+      console.log('Kaixo is not running')
+    break
+
+  default:
+    var help = [
+      '\n::Kaixo, a Pow! like service for Linux machines',
+      '',
+      '  Usage: [start|stop|kill|restart|reload|status]\n'
+    ]
+    console.log(help.join('\n'))
+}

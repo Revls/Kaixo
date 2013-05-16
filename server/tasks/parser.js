@@ -9,7 +9,6 @@ function parse(hosts){
     var hasSpace = false
     if (line.indexOf('#') === 0) return
     line = line.split(/\s|\\t/)
-
     line = line.filter(function (t){
       if (t == '') return false
       return t
@@ -27,6 +26,6 @@ function write(obj){
     else str += obj[host]
     str += '\t' + host + '\n'
   })
-  fs.writeFileSync('/etc/hosts', str, 'utf8')
+  fs.writeFileSync(global.cfg.hostsfile, str, 'utf8')
   return true
 }
