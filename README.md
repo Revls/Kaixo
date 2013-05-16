@@ -12,13 +12,13 @@ $ [sudo] npm install --g kaixo
 
 ## Use
 
-- To redirect `local.dev` request to port 8082:
+- To redirect `local.dev` requests to port `8082`:
 
-$ echo "8082" > ~/.kaixo/local.dev
+`$ echo "8082" > ~/.kaixo/local.dev`
 
 - To create a static server in current directory:
 
-$ echo $(pwd) > ~/.kaixo/local.dev
+`$ echo $(pwd) > ~/.kaixo/local.dev`
 
 ## Warning
 
