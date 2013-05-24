@@ -24,8 +24,7 @@ function parseCfg(){
     var lines = cfg.split('\n')
     cfg = {}
     lines.forEach(function (line){
-      line = line.split(/\:/)
-      line = line.filter(function(t){
+      line = line.split(/\:/).filter(function(t){
         if (t == '' || t == ' ') return false
         return true
       })

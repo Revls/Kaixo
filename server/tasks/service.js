@@ -8,6 +8,7 @@ var addStaticServer = require('./static')(cfg)
 
 module.exports = function (file, stats){
   var port = shell.cat(file)
+  if (!port) return
   var hostname = file.split('/').pop()
   var hosts = shell.cat(cfg.hostsfile)
   hosts = parser.parse(hosts)
@@ -17,6 +18,7 @@ module.exports = function (file, stats){
   }
   hosts[hostname] = { hostname: '127.0.0.1', port: port }
   evnts.emit('hosts', hosts)
+  global.hosts = hosts
   parser.write(hosts)
 }
 

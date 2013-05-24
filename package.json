@@ -28,5 +28,9 @@
     "http-proxy": "~0.10.2",
     "ecstatic": "~0.4.2",
     "daemonize2": "~0.4.0-rc.6"
+  },
+  "devDependencies": {
+    "tap": "~0.4.3",
+    "request": "~2.21.0"
   }
 }

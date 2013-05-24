@@ -29,6 +29,6 @@ wrong.
 
 
 ## License
-MIT (c) 2013 - Alejandro Morales <ale@mit-license.org>
+MIT (c) 2013 - Alejandro Morales <http://ale.mit-license.org>
 
 

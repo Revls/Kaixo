@@ -8,19 +8,19 @@ var monitor = require('watch')
 var Proxy = require('http-proxy')
 var tasks = require('./tasks')
 
-
-
 var port = +process.env.PORT || 80
 var home = process.env.HOME
-var cfgn = path.join(home, '.kaixo')
-var hosts = tasks.loadServices()
+var cfgn = cfg.services
+var hosts = global.hosts = tasks.loadServices()
 
-monitor.createMonitor(cfgn, function (monitor) {
+monitor.createMonitor(cfg.services + '/', function (monitor) {
   monitor.on('created', tasks.createService)
   monitor.on('changed', tasks.restartService)
   monitor.on('removed', tasks.removeService)
   monitor.on('created', function (file){
+    console.log('changeeee')
     hosts = tasks.loadServices()
+    proxy.emit('hosts:new', file)
   })
 })
 
@@ -28,7 +28,7 @@ tasks.createService.on('hosts', function (_hosts){
   hosts = _hosts
 })
 
-Proxy.createServer(function (req, res, proxy){
+var proxy = module.exports = Proxy.createServer(function (req, res, proxy){
   var hostname = req.headers.host
   if (hostname in hosts && hosts[hostname].port) {
     logger.debug('Host: ' + hostname + ' -- Port: ' + hosts[hostname].port)
@@ -37,12 +37,13 @@ Proxy.createServer(function (req, res, proxy){
        port: hosts[hostname].port
      })
   }
-  res.end('::Kaixo service is ready')
-}).listen(port, function (){
-  logger.info('::Kaixo server is ready')
+  res.write('::Kaixo service is ready\n')
+  for (var host in hosts){
+    res.write(host + ' -- ' + hosts[host].port + '\n')
+  }
+  res.end()
 })
 
-function log(){
-  process.stdout.write.apply(process.stdout, arguments)
-  process.stdout.write('\n')
-}
+proxy.listen(port, function (){
+  logger.info('::Kaixo server is ready')
+})
